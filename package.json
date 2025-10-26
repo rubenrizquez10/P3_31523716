@@ -1,0 +1,24 @@
+{
+  "name": "p3-31523716",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "SET PORT=3001 & node ./bin/www",
+    "test": "node ./node_modules/.bin/jest"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "~1.9.1",
+    "sequelize": "^6.37.7",
+    "sqlite3": "^5.1.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^5.0.1"
+  },
+  "devDependencies": {
+    "jest-cli": "^30.2.0"
+  }
+}

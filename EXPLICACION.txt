@@ -1,0 +1,76 @@
+Este proyecto es una API RESTful desarrollada con Node.js y Express, que implementa un sistema de seguridad y gestión de datos para usuarios. A continuación, se detalla su estructura y funcionalidad:
+
+**1. Estructura del Proyecto:**
+El proyecto está organizado en varias carpetas clave:
+- `bin/`: Contiene el script de inicio del servidor (`www`).
+- `config/`: Almacena la configuración de la base de datos (`config.json`).
+- `middleware/`: Contiene el middleware de autenticación (`auth.js`).
+- `models/`: Define los modelos de datos (ej. `User`) y la configuración de Sequelize (`index.js`).
+- `migrations/`: Contiene los archivos para gestionar los cambios en la estructura de la base de datos.
+- `routes/`: Define las rutas de la API (ej. `index.js`, `users.js`, `auth.js`).
+- `public/`: Contiene archivos estáticos (HTML, CSS, JS).
+- `app.js`: El archivo principal de la aplicación Express, donde se configuran los middlewares y las rutas.
+- `package.json`: Define las dependencias del proyecto y los scripts.
+- `app.test.js`, `auth.test.js`: Archivos de pruebas automatizadas.
+
+**2. Endpoints de la API:**
+La API expone los siguientes endpoints:
+
+*   **GET /about:**
+    *   **Descripción:** Devuelve información sobre el autor del proyecto.
+    *   **Respuesta:** Un objeto JSON con `status: "success"` y un campo `data` que contiene `nombreCompleto`, `cedula` y `seccion`.
+*   **GET /ping:**
+    *   **Descripción:** Un endpoint simple para verificar que la API está activa.
+    *   **Respuesta:** Un código de estado `200 OK` con un cuerpo vacío.
+*   **POST /auth/register:**
+    *   **Descripción:** Permite registrar un nuevo usuario en el sistema.
+    *   **Funcionalidad:** Valida la unicidad del correo electrónico y almacena la contraseña de forma segura (hasheada con bcrypt).
+    *   **Respuesta:** `201 Created` con los datos del usuario (sin contraseña) si es exitoso, o `400 Bad Request` si hay un error de validación (ej. email duplicado).
+*   **POST /auth/login:**
+    *   **Descripción:** Permite a un usuario iniciar sesión.
+    *   **Funcionalidad:** Verifica las credenciales y, si son correctas, emite un JSON Web Token (JWT) que identifica al usuario.
+    *   **Respuesta:** `200 OK` con el token JWT si es exitoso, `401 Unauthorized` si la contraseña es inválida, o `404 Not Found` si el usuario no existe.
+*   **GET /users (protegido):**
+    *   **Descripción:** Obtiene una lista de todos los usuarios registrados.
+    *   **Seguridad:** Requiere un token JWT válido en el encabezado `Authorization`.
+*   **GET /users/:id (protegido):**
+    *   **Descripción:** Obtiene la información de un usuario específico por su ID.
+    *   **Seguridad:** Requiere un token JWT válido.
+*   **POST /users (protegido):**
+    *   **Descripción:** Crea un nuevo usuario (pensado para uso administrativo).
+    *   **Seguridad:** Requiere un token JWT válido.
+*   **PUT /users/:id (protegido):**
+    *   **Descripción:** Actualiza la información de un usuario existente por su ID.
+    *   **Seguridad:** Requiere un token JWT válido.
+*   **DELETE /users/:id (protegido):**
+    *   **Descripción:** Elimina un usuario del sistema por su ID.
+    *   **Seguridad:** Requiere un token JWT válido.
+
+**3. Persistencia de Datos:**
+*   **Base de Datos:** Utiliza SQLite para el almacenamiento de datos.
+*   **ORM:** Sequelize es el ORM (Object-Relational Mapping) que gestiona la interacción con la base de datos, permitiendo definir modelos de datos (como `User`) y realizar operaciones CRUD de forma programática.
+*   **Modelo `User`:** Define la estructura de los datos de usuario, incluyendo `fullName`, `email` (único) y `password` (almacenada hasheada).
+
+**4. Autenticación y Autorización:**
+*   **JWT (JSON Web Tokens):** El sistema de autenticación se basa en tokens JWT. Tras un inicio de sesión exitoso, se emite un token que el cliente debe incluir en las solicitudes a rutas protegidas.
+*   **Bcrypt:** Las contraseñas se hashean utilizando `bcrypt` antes de ser almacenadas en la base de datos, garantizando la seguridad de las credenciales.
+*   **Middleware de Autorización:** Un middleware (`middleware/auth.js`) verifica la presencia y validez del token JWT en las solicitudes. Si el token es inválido o no está presente, deniega el acceso a las rutas protegidas.
+
+**5. Pruebas Automatizadas:**
+*   **Jest y Supertest:** El proyecto integra Jest como framework de pruebas y Supertest para probar los endpoints HTTP.
+*   **Cobertura:** Se han creado suites de pruebas para verificar el correcto funcionamiento de los endpoints `/ping` y `/about`, así como para validar el sistema de autenticación (registro, login exitoso y fallido) y el mecanismo de autorización en las rutas protegidas.
+
+**6. Documentación de la API (Swagger):**
+*   **Swagger-jsdoc y Swagger-ui-express:** Se utiliza Swagger para generar y visualizar la documentación interactiva de la API.
+*   **Endpoint:** La documentación está disponible en `/api-docs`.
+*   **Detalles:** Incluye descripciones de todos los endpoints, modelos de datos (DTOs) y especifica qué rutas requieren autenticación.
+
+**7. Integración Continua (CI) con GitHub Actions:**
+*   **Workflow:** Se ha configurado un workflow de GitHub Actions (`.github/workflows/ci.yml`) que se activa con cada `push` y `pull_request` a la rama `main`.
+*   **Pasos:** El workflow configura un entorno de Node.js, instala las dependencias y ejecuta la suite de pruebas (`npm test`), asegurando que el código cumpla con los estándares antes de cualquier despliegue.
+
+**Cómo ejecutar el programa:**
+1.  Abre una terminal en la carpeta `P3_31523716_es`.
+2.  Ejecuta `npm install` para instalar todas las dependencias.
+3.  Ejecuta `npm start` para iniciar el servidor.
+4.  Abre tu navegador y ve a `http://localhost:3001/api-docs` para ver la documentación de la API.
