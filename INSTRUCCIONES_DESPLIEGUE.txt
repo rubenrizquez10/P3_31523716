@@ -1,0 +1,185 @@
+🚀 GUÍA COMPLETA DE DESPLIEGUE - API SECURITY PROJECT
+================================================================
+
+📋 LISTA DE VERIFICACIÓN DE DESPLIEGUE
+=====================================
+
+✅ PASO 1: PREPARAR EL REPOSITORIO GITHUB
+=========================================
+
+1. Inicializar Git (si no está hecho):
+   git init
+   git add .
+   git commit -m "Commit inicial: Sistema completo de seguridad API"
+
+2. Crear repositorio en GitHub:
+   - Ve a https://github.com
+   - Crea un nuevo repositorio llamado "api-security-project"
+   - NO inicialices con README (ya tienes uno)
+
+3. Conectar repositorio local con GitHub:
+   git remote add origin https://github.com/TU_USUARIO/api-security-project.git
+   git branch -M main
+   git push -u origin main
+
+4. Crear rama setup (como se requiere):
+   git checkout -b setup
+   git push origin setup
+   git checkout main
+
+✅ PASO 2: CONFIGURAR RENDER
+============================
+
+1. Crear cuenta en Render:
+   - Ve a https://render.com
+   - Regístrate con tu cuenta de GitHub
+   - Conecta tu cuenta de GitHub
+
+2. Crear nuevo Web Service:
+   - En el dashboard de Render, haz clic en "New"
+   - Selecciona "Web Service"
+   - Conecta tu repositorio de GitHub
+   - Selecciona el repositorio "api-security-project"
+   - Selecciona la rama "main"
+
+✅ PASO 3: CONFIGURAR VARIABLES DE ENTORNO
+==========================================
+
+En la configuración del servicio en Render, agrega estas variables:
+
+Variable          | Valor                                    | Descripción
+------------------|------------------------------------------|------------------
+NODE_ENV          | production                               | Modo de entorno
+JWT_SECRET        | tu-clave-super-secreta-aqui-32-caracteres | Clave secreta JWT
+DB_PATH           | ./database.sqlite                        | Ruta del archivo de BD
+
+🔐 GENERAR JWT_SECRET SEGURO:
+=============================
+
+Opción 1: Usar Node.js
+node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+
+Opción 2: Usar OpenSSL
+openssl rand -hex 32
+
+Opción 3: Generar manualmente (32+ caracteres)
+Ejemplo: "mi-clave-super-secreta-para-jwt-2024-segura"
+
+✅ PASO 4: CONFIGURAR BUILD SETTINGS
+====================================
+
+En Render, configura estos valores:
+
+- Build Command: npm install
+- Start Command: npm start
+- Environment: Node
+- Node Version: 18 o 20 (recomendado)
+
+✅ PASO 5: CONFIGURAR HEALTH CHECK
+==================================
+
+- Health Check Path: /health
+- Render usará este endpoint para verificar que tu API esté funcionando
+
+✅ PASO 6: DESPLEGAR
+===================
+
+1. Hacer clic en "Create Web Service"
+2. Esperar el build (puede tomar 2-5 minutos)
+3. Verificar logs para asegurar que no hay errores
+4. Obtener URL de tu API desplegada
+
+✅ PASO 7: VERIFICAR DESPLIEGUE
+===============================
+
+1. Health Check:
+   curl https://tu-app.onrender.com/health
+
+2. Documentación API:
+   Visita: https://tu-app.onrender.com/api-docs
+
+3. Probar autenticación:
+   # Registrar usuario
+   curl -X POST https://tu-app.onrender.com/auth/register \
+     -H "Content-Type: application/json" \
+     -d '{
+       "fullName": "Usuario Test",
+       "email": "test@ejemplo.com",
+       "password": "password123"
+     }'
+
+✅ PASO 8: CONFIGURAR CI/CD (OPCIONAL)
+======================================
+
+El proyecto ya incluye GitHub Actions. Para activarlo:
+
+1. Push a main activará automáticamente el despliegue
+2. Pull Requests ejecutarán solo las pruebas
+3. Verificar en GitHub Actions que el pipeline funcione
+
+🔧 CONFIGURACIÓN ADICIONAL
+==========================
+
+Variables de Entorno Recomendadas:
+NODE_ENV=production
+PORT=3000
+JWT_SECRET=tu-clave-super-secreta-aqui
+DB_PATH=./database.sqlite
+
+Comandos de Verificación Local:
+npm install          # Instalar dependencias
+npm test            # Ejecutar pruebas
+npm run dev         # Ejecutar en modo desarrollo
+curl http://localhost:3000/health  # Verificar que todo funciona
+
+🚨 SOLUCIÓN DE PROBLEMAS COMUNES
+=================================
+
+Error: "Cannot find module"
+- Verifica que todas las dependencias estén en package.json
+- Asegúrate de que npm install se ejecute correctamente
+
+Error: "Database connection failed"
+- Verifica que DB_PATH esté configurado correctamente
+- SQLite se creará automáticamente en Render
+
+Error: "JWT_SECRET not defined"
+- Asegúrate de configurar la variable JWT_SECRET en Render
+- Debe ser una cadena de al menos 32 caracteres
+
+Error: "Port already in use"
+- Render maneja el puerto automáticamente
+- No necesitas configurar PORT manualmente
+
+📊 MONITOREO POST-DESPLIEGUE
+============================
+
+1. Logs de Render: Revisa los logs en el dashboard
+2. Health Check: Verifica que /health responda correctamente
+3. API Documentation: Confirma que /api-docs funcione
+4. Pruebas de endpoints: Prueba registro y login
+
+🎯 URLS IMPORTANTES
+===================
+
+- API Base: https://tu-app.onrender.com
+- Health Check: https://tu-app.onrender.com/health
+- API Docs: https://tu-app.onrender.com/api-docs
+- Registro: https://tu-app.onrender.com/auth/register
+- Login: https://tu-app.onrender.com/auth/login
+
+✅ LISTA DE VERIFICACIÓN FINAL
+==============================
+
+□ Repositorio en GitHub creado
+□ Código subido a GitHub
+□ Rama setup creada
+□ Cuenta de Render configurada
+□ Web Service creado en Render
+□ Variables de entorno configuradas
+□ Build exitoso en Render
+□ Health check funcionando
+□ API documentation accesible
+□ Pruebas de endpoints exitosas
+
+🎉 ¡CON ESTOS PASOS TENDRÁS TU API COMPLETAMENTE DESPLEGADA Y FUNCIONANDO EN PRODUCCIÓN!
