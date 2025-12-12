@@ -14,6 +14,26 @@ class ProductRepository {
   }
 
   async create(productData, categoryId, tagIds) {
+    // Validate category exists
+    if (categoryId) {
+      const category = await Category.findByPk(categoryId);
+      if (!category) {
+        throw new Error(`Category with id ${categoryId} not found`);
+      }
+    }
+
+    // Validate tags exist
+    if (tagIds && tagIds.length > 0) {
+      const tags = await Tag.findAll({
+        where: { id: tagIds }
+      });
+      if (tags.length !== tagIds.length) {
+        const foundIds = tags.map(tag => tag.id);
+        const missingIds = tagIds.filter(id => !foundIds.includes(id));
+        throw new Error(`Tags not found: ${missingIds.join(', ')}`);
+      }
+    }
+
     const product = await Product.create({ ...productData, categoryId });
     if (tagIds && tagIds.length > 0) {
       await product.setTags(tagIds);
@@ -27,6 +47,27 @@ class ProductRepository {
     if (!product) {
       return null;
     }
+
+    // Validate category exists
+    if (categoryId) {
+      const category = await Category.findByPk(categoryId);
+      if (!category) {
+        throw new Error(`Category with id ${categoryId} not found`);
+      }
+    }
+
+    // Validate tags exist
+    if (tagIds && tagIds.length > 0) {
+      const tags = await Tag.findAll({
+        where: { id: tagIds }
+      });
+      if (tags.length !== tagIds.length) {
+        const foundIds = tags.map(tag => tag.id);
+        const missingIds = tagIds.filter(id => !foundIds.includes(id));
+        throw new Error(`Tags not found: ${missingIds.join(', ')}`);
+      }
+    }
+
     await product.update({ ...productData, categoryId });
     // Ensure tagIds is an array, even if empty, to correctly set/clear tags
     await product.setTags(tagIds || []);

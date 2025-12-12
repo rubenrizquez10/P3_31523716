@@ -736,6 +736,25 @@ envVars:
 // servers: [ ... ] ← Comentado
 ```
 
+#### 4. **Error al Crear Productos en Render**
+- **Problema**: Falta de validación de categorías/tags existentes
+- **Solución**: Agregadas validaciones en ProductRepository
+```javascript
+// En src/repositories/ProductRepository.js
+// Ahora valida que:
+// - categoryId existe en la tabla categories
+// - Todos los tagIds existen en la tabla tags
+// - Muestra mensajes de error específicos
+```
+
+#### 5. **JWT_SECRET faltante**
+- **Problema**: Error "secretOrPrivateKey must have a value"
+- **Solución**: Agregado fallback y valor fijo en Render
+```javascript
+// En src/middleware/auth.js
+const jwtSecret = process.env.JWT_SECRET || 'supersecretjwtkey';
+```
+
 ### Variables de Entorno Requeridas en Render
 
 | Variable | Valor | Descripción |
