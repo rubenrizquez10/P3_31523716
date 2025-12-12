@@ -55,9 +55,10 @@ const authenticateToken = async (req, res, next) => {
  * Generar token JWT para usuario
  */
 const generateToken = (user) => {
+  const jwtSecret = process.env.JWT_SECRET || 'supersecretjwtkey';
   return jwt.sign(
     { id: user.id, email: user.email },
-    process.env.JWT_SECRET,
+    jwtSecret,
     { expiresIn: '24h' }
   );
 };

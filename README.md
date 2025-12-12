@@ -741,7 +741,7 @@ envVars:
 | Variable | Valor | Descripción |
 |----------|-------|-------------|
 | `NODE_ENV` | `production` | Modo producción |
-| `JWT_SECRET` | Auto-generado | Secreto JWT (Render lo genera) |
+| `JWT_SECRET` | `supersecretjwtkeyforrenderproduction2025` | Secreto JWT fijo para Render |
 | `DB_PATH` | `/tmp/database.sqlite` | Ruta BD para Render |
 
 ### Verificación de Funcionamiento
